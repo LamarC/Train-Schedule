@@ -18,10 +18,10 @@ var database = firebase.database();
 $(".btn-primary").on("click", function (event) {
     event.preventDefault(); 
 
-    var name = $("<#name>").val().trim();
-    var dest = $("<#destination>").val().trim();    
+    var name = $("#name").val().trim();
+    var dest = $("#destination").val().trim();    
     var next = moment($("#train-time").val().trim(), "hh:mm").subtract(1, "years").format("X");
-    var freq = $("<#frequency>").val().trim();
+    var freq = $("#frequency").val().trim();
 
     // var currentTime = moment();
     // console.log(currentTime);
@@ -37,6 +37,8 @@ $(".btn-primary").on("click", function (event) {
 
     //Uploads train info to firebase
     database.ref().push(Newtrain);
+
+    $(".form-control").empty();
 
     $("<#name>").val("");
     $("<#destination>").val("");
@@ -70,8 +72,7 @@ database.ref().on("child_added", function(snapshot){
     var nextArrival = moment().add(minUntil, "minutes").format("hh:mm");
 
     //Appending info to table tag 
-    $("<tbody>").append("<tr><td>") + name + "<td>" + dest + "<td>" + freq + "<td>" + nextArrival + "<td>" + minUntil + "<td>";
-
+    $("tbody").append("<td>" + name  + dest  + freq + nextArrival + minUntil);
 });
 
 });
