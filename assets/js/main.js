@@ -1,5 +1,6 @@
 console.log("We are in");
 
+$(document).ready(function() {
 // Initialize Firebase
 var config = {
     apiKey: "AIzaSyCRlvsiktEcC_HEz0F5h1HVX5dF9gaDzHc",
@@ -8,13 +9,13 @@ var config = {
     projectId: "train-schedule-61b7c",
     storageBucket: "train-schedule-61b7c.appspot.com",
     messagingSenderId: "725778773260"
-};
+  };
 
 firebase.initializeApp(config);
 
 var database = firebase.database();
 
-$(".submit").on("click", function (event) {
+$(".btn-primary").on("click", function (event) {
     event.preventDefault(); 
 
     var name = $("<#name>").val().trim();
@@ -54,7 +55,7 @@ database.ref().on("child_added", function(snapshot){
     var freq = snapshot.val().everyXMin;
 
     //Time format 
-    var trainTime = moment.unix(firstTime).format("hh:mm");
+    var trainTime = moment.unix(next).format("hh:mm");
 
     //Diff btwn times 
     var difference = moment().diff(moment(trainTime),"minutes");
@@ -69,6 +70,8 @@ database.ref().on("child_added", function(snapshot){
     var nextArrival = moment().add(minUntil, "minutes").format("hh:mm");
 
     //Appending info to table tag 
-    $("<tbody>").append("<tr><td>") + name + "<td>" + dest + "<td>" + freq + "<td>" + next + "<td>" + minUntil + "<td>";
+    $("<tbody>").append("<tr><td>") + name + "<td>" + dest + "<td>" + freq + "<td>" + nextArrival + "<td>" + minUntil + "<td>";
 
-})
+});
+
+});
