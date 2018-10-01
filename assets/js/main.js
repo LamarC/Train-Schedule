@@ -1,78 +1,79 @@
 console.log("We are in");
 
-$(document).ready(function() {
-// Initialize Firebase
-var config = {
-    apiKey: "AIzaSyCRlvsiktEcC_HEz0F5h1HVX5dF9gaDzHc",
-    authDomain: "train-schedule-61b7c.firebaseapp.com",
-    databaseURL: "https://train-schedule-61b7c.firebaseio.com",
-    projectId: "train-schedule-61b7c",
-    storageBucket: "train-schedule-61b7c.appspot.com",
-    messagingSenderId: "725778773260"
-  };
-
-firebase.initializeApp(config);
-
-var database = firebase.database();
-
-$(".btn-primary").on("click", function (event) {
-    event.preventDefault(); 
-
-    var name = $("#name").val().trim();
-    var dest = $("#destination").val().trim();    
-    var next = moment($("#train-time").val().trim(), "hh:mm").subtract(1, "years").format("X");
-    var freq = $("#frequency").val().trim();
-
-    // var currentTime = moment();
-    // console.log(currentTime);
-
-    var Newtrain = {
-
-        train:       name,
-        trainGoing:  dest,
-        trainComing: next,
-        everyXMin:   freq
-        
+$(document).ready(function () {
+    // Initialize Firebase
+    var config = {
+        apiKey: "AIzaSyCRlvsiktEcC_HEz0F5h1HVX5dF9gaDzHc",
+        authDomain: "train-schedule-61b7c.firebaseapp.com",
+        databaseURL: "https://train-schedule-61b7c.firebaseio.com",
+        projectId: "train-schedule-61b7c",
+        storageBucket: "train-schedule-61b7c.appspot.com",
+        messagingSenderId: "725778773260"
     };
 
-    //Uploads train info to firebase
-    database.ref().push(Newtrain);
+    firebase.initializeApp(config);
 
-    $(".form-control").empty();
+    var database = firebase.database();
 
-    $("<#name>").val("");
-    $("<#destination>").val("");
-    $("#train-time").val("");
-    $("<#frequency>").val("");
+    $(".btn-primary").on("click", function (event) {
+        event.preventDefault();
 
-    return false; // I read about it
-});
+        var name = $("#name").val().trim();
+        var dest = $("#destination").val().trim();
+        var next = moment($("#train-time").val().trim(), "hh:mm").subtract(1, "years").format("X");
+        var freq = $("#frequency").val().trim();
 
-database.ref().on("child_added", function(snapshot){
-    console.log(snapshot.val());
+        // var currentTime = moment();
+        // console.log(currentTime);
 
-    var name = snapshot.val().train;
-    var dest = snapshot.val().trainGoing;
-    var next = snapshot.val().trainComing;
-    var freq = snapshot.val().everyXMin;
+        var Newtrain = {
 
-    //Time format 
-    var trainTime = moment.unix(next).format("hh:mm");
+            train: name,
+            trainGoing: dest,
+            trainComing: next,
+            everyXMin: freq
 
-    //Diff btwn times 
-    var difference = moment().diff(moment(trainTime),"minutes");
+        };
 
-    //Remaining time
-    var trainRemain = difference % freq;
+        //Uploads train info to firebase
+        database.ref().push(Newtrain);
 
-    //Min until arrival 
-    var minUntil = freq - trainRemain;
 
-    //Next Arrival Time
-    var nextArrival = moment().add(minUntil, "minutes").format("hh:mm");
+        //Clears all text-boxes 
+        $("#name").val("");
+        $("#destination").val("");
+        $("#train-time").val("");
+        $("#frequency").val("");
 
-    //Appending info to table tag 
-    $("tbody").append("<td>" + name  + dest  + freq + nextArrival + minUntil);
-});
+        return false;
+    });
+
+    database.ref().on("child_added", function (childSnapshot) {
+        console.log(childSnapshot.val());
+
+        var data = childSnapshot.val();
+        var name = data.train;
+        var dest = data.trainGoing;
+        var next = data.trainComing;
+        var freq = data.everyXMin;
+
+        //Time format 
+        var trainTime = moment.unix(next).format("hh:mm");
+
+        //Diff btwn times 
+        var difference = moment().diff(moment(trainTime), "minutes");
+
+        //Remaining time
+        var trainRemain = difference % freq;
+
+        //Min until arrival 
+        var minUntil = freq - trainRemain;
+
+        //Next Arrival Time
+        var nextArrival = moment().add(minUntil, "minutes").format("hh:mm");
+
+        //Appending info to table tag 
+        $("tbody").append("<tr><td>" + name + "</td><td>" + dest + "</td><td>" + freq + "</td><td>" + nextArrival + "</td><td>" + minUntil);
+    });
 
 });
