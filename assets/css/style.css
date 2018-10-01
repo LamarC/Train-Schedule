@@ -1,0 +1,25 @@
+body {
+    font-family: 'Fahkwang', sans-serif;
+}
+
+.jumbotron {
+    background-image: url(../images/train-stat.jpg);
+    background-position: center;
+}
+
+.text-center {
+    color: black;
+    font-weight: bold;
+    font-size: 57px;
+}
+
+h3 {
+    background-color:#8a8c91;
+    color: white;
+    padding: 7px;
+    
+}
+
+
+
+

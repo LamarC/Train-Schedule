@@ -15,7 +15,7 @@ $(document).ready(function () {
 
     var database = firebase.database();
 
-    $(".btn-primary").on("click", function (event) {
+    $(".btn btn-secondary").on("click", function (event) {
         event.preventDefault();
 
         var name = $("#name").val().trim();
